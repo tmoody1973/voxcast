@@ -104,8 +104,8 @@ export const emit = mutation({
     const now = Date.now();
 
     // Validate signal type exists for category
-    const validTypes = SIGNAL_TYPES[args.category] || [];
-    if (!validTypes.includes(args.type as any)) {
+    const validTypes: readonly string[] = SIGNAL_TYPES[args.category] || [];
+    if (!validTypes.includes(args.type)) {
       console.warn(`Unknown signal type: ${args.type} for category: ${args.category}`);
     }
 
