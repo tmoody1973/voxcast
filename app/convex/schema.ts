@@ -162,15 +162,29 @@ export default defineSchema({
     correlationType: v.union(
       v.literal("temporal"),      // Signals within time window
       v.literal("entity"),        // Same entity referenced
-      v.literal("collision"),     // Cross-department collision
-      v.literal("pattern")        // Recurring pattern detected
+      v.literal("category"),      // Category intersection pattern
+      v.literal("collision")      // Cross-department collision
     ),
     confidence: v.number(),       // 0-100 confidence score
     description: v.string(),
     metadata: v.optional(v.any()),
+
+    // Lifecycle
+    status: v.union(
+      v.literal("active"),
+      v.literal("acknowledged"),
+      v.literal("dismissed")
+    ),
+    acknowledgedAt: v.optional(v.number()),
+    acknowledgedBy: v.optional(v.string()),
+    dismissedAt: v.optional(v.number()),
+    dismissReason: v.optional(v.string()),
+
     createdAt: v.number(),
+    updatedAt: v.number(),
   })
     .index("by_station", ["stationId"])
+    .index("by_station_status", ["stationId", "status"])
     .index("by_created", ["createdAt"]),
 
   // ---------------------------------------------------------------------------

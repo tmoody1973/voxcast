@@ -8,6 +8,7 @@
  * @module
  */
 
+import type * as correlations from "../correlations.js";
 import type * as entities from "../entities.js";
 import type * as signals from "../signals.js";
 
@@ -18,6 +19,7 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  correlations: typeof correlations;
   entities: typeof entities;
   signals: typeof signals;
 }>;
