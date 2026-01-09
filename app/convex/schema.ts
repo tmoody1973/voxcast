@@ -287,6 +287,134 @@ export default defineSchema({
     .index("by_occurred", ["occurredAt"]),
 
   // ---------------------------------------------------------------------------
+  // Sources - Knowledge Base (NotebookLM-style)
+  // Documents, spreadsheets, URLs, notes that form the station's knowledge base
+  // ---------------------------------------------------------------------------
+
+  sources: defineTable({
+    stationId: v.id("stations"),
+    type: v.union(
+      v.literal("document"),    // PDFs, Word docs, PowerPoints
+      v.literal("spreadsheet"), // Excel, CSV files
+      v.literal("url"),         // Web links, articles
+      v.literal("note"),        // Manual intel entries
+      v.literal("audio"),       // Audio files
+      v.literal("video")        // Video files
+    ),
+    name: v.string(),
+    description: v.optional(v.string()),
+
+    // Content storage
+    content: v.optional(v.string()),     // Extracted text content / note content
+    url: v.optional(v.string()),         // For URL type sources
+    fileId: v.optional(v.id("_storage")), // Convex storage ID for uploaded files
+    fileName: v.optional(v.string()),
+    fileType: v.optional(v.string()),
+
+    // Processing status
+    processingStatus: v.union(
+      v.literal("pending"),
+      v.literal("processing"),
+      v.literal("completed"),
+      v.literal("failed")
+    ),
+    processingError: v.optional(v.string()),
+
+    // Metadata
+    wordCount: v.optional(v.number()),
+    addedBy: v.optional(v.id("users")),
+
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_station", ["stationId"])
+    .index("by_station_type", ["stationId", "type"])
+    .index("by_processing_status", ["processingStatus"]),
+
+  // ---------------------------------------------------------------------------
+  // Social Media Connections - OAuth tokens for data integration
+  // ---------------------------------------------------------------------------
+
+  socialConnections: defineTable({
+    stationId: v.id("stations"),
+    platform: v.union(
+      v.literal("facebook"),
+      v.literal("instagram"),
+      v.literal("linkedin"),
+      v.literal("twitter"),
+      v.literal("youtube"),
+      v.literal("google_analytics")
+    ),
+
+    // Account info
+    accountId: v.string(),           // Platform-specific account/page ID
+    accountName: v.string(),         // Display name
+    accountType: v.optional(v.string()), // "page", "profile", "business", etc.
+
+    // OAuth tokens (encrypted in production)
+    accessToken: v.string(),
+    refreshToken: v.optional(v.string()),
+    tokenExpiresAt: v.optional(v.number()),
+
+    // Sync settings
+    syncEnabled: v.boolean(),
+    lastSyncAt: v.optional(v.number()),
+    syncFrequency: v.union(
+      v.literal("hourly"),
+      v.literal("daily"),
+      v.literal("weekly")
+    ),
+
+    // Status
+    status: v.union(
+      v.literal("active"),
+      v.literal("expired"),
+      v.literal("error"),
+      v.literal("disconnected")
+    ),
+    lastError: v.optional(v.string()),
+
+    // Metadata
+    permissions: v.optional(v.array(v.string())),  // Granted OAuth scopes
+    connectedBy: v.id("users"),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_station", ["stationId"])
+    .index("by_station_platform", ["stationId", "platform"])
+    .index("by_status", ["status"]),
+
+  // Social Media Metrics - Synced data from connected accounts
+  socialMetrics: defineTable({
+    stationId: v.id("stations"),
+    connectionId: v.id("socialConnections"),
+    platform: v.string(),
+
+    // Metric type
+    metricType: v.union(
+      v.literal("post"),           // Individual post performance
+      v.literal("page_insights"),  // Page/account level metrics
+      v.literal("audience"),       // Follower demographics
+      v.literal("engagement")      // Engagement summary
+    ),
+
+    // Time period
+    periodStart: v.number(),
+    periodEnd: v.number(),
+
+    // Flexible data based on metric type
+    data: v.any(),
+
+    // Sync metadata
+    fetchedAt: v.number(),
+    rawResponse: v.optional(v.any()),  // Store raw API response for debugging
+  })
+    .index("by_station", ["stationId"])
+    .index("by_connection", ["connectionId"])
+    .index("by_platform_type", ["platform", "metricType"])
+    .index("by_period", ["periodStart"]),
+
+  // ---------------------------------------------------------------------------
   // MOO-25: Show Profiles
   // ---------------------------------------------------------------------------
 

@@ -8,6 +8,7 @@
  * @module
  */
 
+import type * as agent from "../agent.js";
 import type * as briefings from "../briefings.js";
 import type * as collisions from "../collisions.js";
 import type * as correlations from "../correlations.js";
@@ -15,6 +16,8 @@ import type * as crons from "../crons.js";
 import type * as entities from "../entities.js";
 import type * as scheduled from "../scheduled.js";
 import type * as signals from "../signals.js";
+import type * as socialConnections from "../socialConnections.js";
+import type * as sources from "../sources.js";
 import type * as users from "../users.js";
 
 import type {
@@ -24,6 +27,7 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  agent: typeof agent;
   briefings: typeof briefings;
   collisions: typeof collisions;
   correlations: typeof correlations;
@@ -31,6 +35,8 @@ declare const fullApi: ApiFromModules<{
   entities: typeof entities;
   scheduled: typeof scheduled;
   signals: typeof signals;
+  socialConnections: typeof socialConnections;
+  sources: typeof sources;
   users: typeof users;
 }>;
 
