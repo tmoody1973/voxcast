@@ -15,6 +15,7 @@ import type * as crons from "../crons.js";
 import type * as entities from "../entities.js";
 import type * as scheduled from "../scheduled.js";
 import type * as signals from "../signals.js";
+import type * as users from "../users.js";
 
 import type {
   ApiFromModules,
@@ -30,6 +31,7 @@ declare const fullApi: ApiFromModules<{
   entities: typeof entities;
   scheduled: typeof scheduled;
   signals: typeof signals;
+  users: typeof users;
 }>;
 
 /**
