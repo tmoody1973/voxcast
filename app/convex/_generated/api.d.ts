@@ -8,9 +8,12 @@
  * @module
  */
 
+import type * as briefings from "../briefings.js";
 import type * as collisions from "../collisions.js";
 import type * as correlations from "../correlations.js";
+import type * as crons from "../crons.js";
 import type * as entities from "../entities.js";
+import type * as scheduled from "../scheduled.js";
 import type * as signals from "../signals.js";
 
 import type {
@@ -20,9 +23,12 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  briefings: typeof briefings;
   collisions: typeof collisions;
   correlations: typeof correlations;
+  crons: typeof crons;
   entities: typeof entities;
+  scheduled: typeof scheduled;
   signals: typeof signals;
 }>;
 
